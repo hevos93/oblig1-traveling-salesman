@@ -34,7 +34,7 @@ class oblig1 {
 
         public static void random(int[][] city) { //TODO implement an array to store the solution for random third
             long startTime = System.nanoTime();//creating a start timestamp
-            int[] visited = new int[city.length]; //creates a new 1d array
+            int[] visited = new int[city.length]; //creates a new 1d array TODO maybe make a method that creates this array
             for (int i = 0; i < visited.length; i++) { //Makes every value in visited zero.
                 visited[i] = 0;
             }//for
