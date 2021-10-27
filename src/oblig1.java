@@ -28,7 +28,7 @@ class oblig1 {
                 //System.out.println("Distance from city " + (i + 1) + " to city " + (j + 1) + " is " + city[i][j]);
             }//for
         }//for
-            //random(city);
+            random(city);
             int[] orderGreedy = greedy(city);
             greedyRandom(city, orderGreedy);
         }//method main
@@ -129,34 +129,29 @@ class oblig1 {
             greedyRandomOrder[i] = 0;
             greedyRandomOrder[i] = order[i]; //and then with the equivalent values of the order array
         }
-        int orgCost = 0;
-        int oldCost = 0;
+        int orgCost = costCalculation(city, order);
+        int oldCost = orgCost;
 
         int n = 1000;
         for (int i = 0; i < n; i++ ) {
             Random rnd = new Random(); //choosing two random indexes of order
-            int index1 = rnd.nextInt(order.length);
+            int index1 = rnd.nextInt(order.length);//selects two random indexes
             int index2 = rnd.nextInt(order.length);
-
+            if (index1 == index2)
+                index2 = rnd.nextInt(order.length);
             int tmp = 0;
 
-            tmp = greedyRandomOrder[index1];
+            tmp = greedyRandomOrder[index1]; //changes location within the array
             greedyRandomOrder[index1] = greedyRandomOrder[index2];
             greedyRandomOrder[index2] = tmp;
 
-//            System.out.println("Order\tGreedyRandomOrder");
-//            for (int j = 0; j < order.length; j++)
-//                System.out.println(order[j] + "\t\t" + greedyRandomOrder[j]);
-
-            orgCost = costCalculation(city, order);
-            oldCost = orgCost;
-            int newCost = costCalculation(city, greedyRandomOrder);
+            int newCost = costCalculation(city, greedyRandomOrder); //checks the cost
             if (oldCost > newCost) {
                 order = greedyRandomOrder;
                 oldCost = newCost;
-                System.out.println("New solution found. Cost: " + oldCost);
             }
-            //System.out.println("Org: " + oldCost + "\tNew: " + newCost);
+            else
+                greedyRandomOrder = order;
         }
 
         long endTime = System.nanoTime();//creating the end timestamp
@@ -184,8 +179,7 @@ class oblig1 {
             orgCost = orgCost + city[order[i]][order[i + 1]];
             lastCity=order[i+1];
         }//for
-        orgCost = orgCost +city[lastCity][order[0]];
-        //System.out.println("Total Cost: "+orgCost);
+        orgCost = orgCost +city[lastCity][order[0]]; //adds the cost to go back to start
         return orgCost;
     }//method costCalculation
 }//class oblig1
