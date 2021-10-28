@@ -6,9 +6,9 @@ class oblig1 {
         Scanner input = new Scanner(System.in);
         Random rnd = new Random();
 
-        //System.out.println("How many cities do you want to run the algorithm with?");
-        //int l = input.nextInt();
-        int l = 10;
+        System.out.println("How many cities do you want to run the algorithm with?");
+        int l = input.nextInt();
+        //int l = 100;
         int[][] city = new int [l][l]; //creates a new 2d array for cities
 
         for(int i=0; i<city.length; i++) { //fills the cities array with zeros
@@ -28,14 +28,16 @@ class oblig1 {
                 //System.out.println("Distance from city " + (i + 1) + " to city " + (j + 1) + " is " + city[i][j]);
             }//for
         }//for
-            //random(city);
-            int[] orderGreedy = greedy(city);
-            greedyRandom(city, orderGreedy);
+           for(int i=0; i<10;i++) {
+               //random(city);
+               int[] orderGreedy = greedy(city);
+               greedyRandom(city, orderGreedy);
+           }
         }//method main
 
         public static int[] random(int[][] city) {
             long startTime = System.nanoTime();//creating a start timestamp
-            int[] visited = new int[city.length]; //creates a new 1d array TODO maybe make a method that creates this array
+            int[] visited = new int[city.length]; //creates a new 1d array
             int[] orderRandom = new int[city.length];//creates a mew 1d array to hold the final order
             for (int i = 0; i < visited.length; i++) { //Makes every value in visited zero.
                 visited[i] = 0;
@@ -122,21 +124,26 @@ class oblig1 {
         return orderGreedy;
     }//method greedy
 
-    public static int[] greedyRandom(int [][] city, int[] order){ //TODO implement random and an array for the solution first
+    public static int[] greedyRandom(int [][] city, int[] order){ //greedyrandom method
        long startTime = System.nanoTime();//creating a start timestamp
+        System.out.println("\nGREEDY RANDOM METHOD: " );
        int[] greedyRandomOrder = new int [order.length];//creates a 1d array to store the new order in
         for (int i = 0; i<greedyRandomOrder.length; i++) { //fills the new array with zeros
             greedyRandomOrder[i] = 0;
             greedyRandomOrder[i] = order[i]; //and then with the equivalent values of the order array
         }
-        int orgCost = 0;
-        int oldCost = 0;
+        //nt orgCost = 0;
+        int orgCost = costCalculation(city, order);
+        int oldCost = orgCost;
 
-        int n = 1000;
+        int n = order.length*1000;   //how many times the greedyRandom should try to find a new solution
         for (int i = 0; i < n; i++ ) {
             Random rnd = new Random(); //choosing two random indexes of order
             int index1 = rnd.nextInt(order.length);
             int index2 = rnd.nextInt(order.length);
+
+            if(index1==index2)
+                index2 = rnd.nextInt(order.length);
 
             int tmp = 0;
 
@@ -148,8 +155,8 @@ class oblig1 {
 //            for (int j = 0; j < order.length; j++)
 //                System.out.println(order[j] + "\t\t" + greedyRandomOrder[j]);
 
-            orgCost = costCalculation(city, order);
-            oldCost = orgCost;
+//            orgCost = costCalculation(city, order);
+//            oldCost = orgCost;
             int newCost = costCalculation(city, greedyRandomOrder);
             if (oldCost > newCost) {
                 order = greedyRandomOrder;
@@ -165,8 +172,8 @@ class oblig1 {
         long s = ns/1000000000;
         int startCity = order[0];
         int endCity = order[order.length-1];
-        System.out.println("\nGREEDY RANDOM METHOD: " +
-                " \n\tStart city: "+startCity+
+        System.out.println(
+                " \tStart city: "+startCity+
                 " \n\tEnd city: "+endCity+
                 " \n\tOriginal cost: "+orgCost+
                 " \n\tNew cost: "+oldCost+
