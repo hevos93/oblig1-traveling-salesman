@@ -1,14 +1,14 @@
+import java.util.Calendar;
 import java.util.Scanner;
 import java.util.Random;
 
 class oblig1 {
-       public static void main(String[] args) { //TODO implement try catch to convert to bigint - fourth
+       public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Random rnd = new Random();
 
-        //System.out.println("How many cities do you want to run the algorithm with?");
-        //int l = input.nextInt();
-        int l = 10;
+        System.out.println("How many cities do you want to run the algorithm with?");
+        int l = input.nextInt();
         int[][] city = new int [l][l]; //creates a new 2d array for cities
 
         for(int i=0; i<city.length; i++) { //fills the cities array with zeros
@@ -28,14 +28,14 @@ class oblig1 {
                 //System.out.println("Distance from city " + (i + 1) + " to city " + (j + 1) + " is " + city[i][j]);
             }//for
         }//for
-            //random(city);
-            int[] orderGreedy = greedy(city);
-            greedyRandom(city, orderGreedy);
+               random(city);
+               int[] orderGreedy = greedy(city);
+               greedyRandom(city, orderGreedy);
         }//method main
 
         public static int[] random(int[][] city) {
             long startTime = System.nanoTime();//creating a start timestamp
-            int[] visited = new int[city.length]; //creates a new 1d array TODO maybe make a method that creates this array
+            int[] visited = new int[city.length]; //creates a new 1d array
             int[] orderRandom = new int[city.length];//creates a mew 1d array to hold the final order
             for (int i = 0; i < visited.length; i++) { //Makes every value in visited zero.
                 visited[i] = 0;
@@ -90,7 +90,7 @@ class oblig1 {
         int cost = 0;
 
         for(int i = 0; i< (city.length-1); i++) {
-            lowest = city[start][0] + 100;
+            lowest = city[start][0] + 10000;
             for (int j = 0; j < city.length; j++) { //calculates which city has the least cost to move to
                 if (city[start][j] < lowest && j != start && city[start][j] != 0 && visited[j] == 0) {
                     lowest = city[start][j];
@@ -119,45 +119,44 @@ class oblig1 {
                 " \n\tEnd city: "+endCity+
                 " \n\tTotal cost: "+(cost+city[endCity][startCity])+
                 " \n\tTotal Time: "+ns+"ns, or "+ms+"ms, or "+s+"s.");
+
         return orderGreedy;
     }//method greedy
 
-    public static int[] greedyRandom(int [][] city, int[] order){ //TODO implement random and an array for the solution first
+    public static int[] greedyRandom(int [][] city, int[] order){
        long startTime = System.nanoTime();//creating a start timestamp
+       Random rnd = new Random(); //creating random object
+
        int[] greedyRandomOrder = new int [order.length];//creates a 1d array to store the new order in
         for (int i = 0; i<greedyRandomOrder.length; i++) { //fills the new array with zeros
             greedyRandomOrder[i] = 0;
-            greedyRandomOrder[i] = order[i]; //and then with the equivalent values of the order array
-        }
-        int orgCost = 0;
-        int oldCost = 0;
+            greedyRandomOrder[i] = order[i]; //and then with the equivalent values of the order array TEST
+        }//for
+        int orgCost = costCalculation(city, order);
+        int oldCost = orgCost;
 
-        int n = 1000;
+        int n = order.length*100000;
         for (int i = 0; i < n; i++ ) {
-            Random rnd = new Random(); //choosing two random indexes of order
-            int index1 = rnd.nextInt(order.length);
+            int index1 = rnd.nextInt(order.length);//choosing two random indexes
             int index2 = rnd.nextInt(order.length);
+            if (index1==index2) //if check for equal indexes
+                index2 = rnd.nextInt(order.length);
 
-            int tmp = 0;
+            int tmp = 0; //temporary placeholder for index2
 
-            tmp = greedyRandomOrder[index1];
+            tmp = greedyRandomOrder[index1]; //changes two indexes
             greedyRandomOrder[index1] = greedyRandomOrder[index2];
             greedyRandomOrder[index2] = tmp;
 
-//            System.out.println("Order\tGreedyRandomOrder");
-//            for (int j = 0; j < order.length; j++)
-//                System.out.println(order[j] + "\t\t" + greedyRandomOrder[j]);
-
-            orgCost = costCalculation(city, order);
-            oldCost = orgCost;
-            int newCost = costCalculation(city, greedyRandomOrder);
-            if (oldCost > newCost) {
+            int newCost = costCalculation(city, greedyRandomOrder); //calculates the new cost
+            if (oldCost > newCost) { //checks if the new cost is smaller than the old cost
                 order = greedyRandomOrder;
                 oldCost = newCost;
-                System.out.println("New solution found. Cost: " + oldCost);
-            }
-            //System.out.println("Org: " + oldCost + "\tNew: " + newCost);
-        }
+                //System.out.println("New solution found. Cost: " + oldCost);
+            }//if
+            else
+                greedyRandomOrder=order;
+        }//for
 
         long endTime = System.nanoTime();//creating the end timestamp
         long ns = endTime-startTime;
@@ -171,11 +170,11 @@ class oblig1 {
                 " \n\tOriginal cost: "+orgCost+
                 " \n\tNew cost: "+oldCost+
                 " \n\tTotal Time: "+ns+"ns, or "+ms+"ms, or "+s+"s.");
+
+        System.out.println(costCalculation(city, greedyRandomOrder));
+
         return greedyRandomOrder;
     }//method greedyRandom
-
-
-
 
     public static int costCalculation(int[][] city, int[] order){ //method to calculate cost based on the city array and the order
         int orgCost = 0;
@@ -184,8 +183,7 @@ class oblig1 {
             orgCost = orgCost + city[order[i]][order[i + 1]];
             lastCity=order[i+1];
         }//for
-        orgCost = orgCost +city[lastCity][order[0]];
-        //System.out.println("Total Cost: "+orgCost);
+        orgCost = orgCost +city[lastCity][order[0]]; //includes the return trip to start
         return orgCost;
     }//method costCalculation
 }//class oblig1
