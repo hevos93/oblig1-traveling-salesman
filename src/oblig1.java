@@ -130,7 +130,7 @@ class oblig1 {
        int[] greedyRandomOrder = new int [order.length];//creates a 1d array to store the new order in
         for (int i = 0; i<greedyRandomOrder.length; i++) { //fills the new array with zeros
             greedyRandomOrder[i] = 0;
-            greedyRandomOrder[i] = order[i]; //and then with the equivalent values of the order array TEST
+            greedyRandomOrder[i] = order[i]; //and then with the equivalent values of the order array
         }//for
         int orgCost = costCalculation(city, order);
         int oldCost = orgCost;
@@ -149,13 +149,13 @@ class oblig1 {
             greedyRandomOrder[index2] = tmp;
 
             int newCost = costCalculation(city, greedyRandomOrder); //calculates the new cost
+            //resets the array
             if (oldCost > newCost) { //checks if the new cost is smaller than the old cost
-                order = greedyRandomOrder;
-                oldCost = newCost;
-                //System.out.println("New solution found. Cost: " + oldCost);
+                System.arraycopy(greedyRandomOrder, 0, order, 0, order.length); //updates the array with the new order
+                oldCost = newCost; //updates the cost
             }//if
             else
-                greedyRandomOrder=order;
+                System.arraycopy(order, 0, greedyRandomOrder, 0, order.length); //resets the array to the old order
         }//for
 
         long endTime = System.nanoTime();//creating the end timestamp
@@ -170,8 +170,6 @@ class oblig1 {
                 " \n\tOriginal cost: "+orgCost+
                 " \n\tNew cost: "+oldCost+
                 " \n\tTotal Time: "+ns+"ns, or "+ms+"ms, or "+s+"s.");
-
-        System.out.println(costCalculation(city, greedyRandomOrder));
 
         return greedyRandomOrder;
     }//method greedyRandom
